@@ -1,0 +1,4 @@
+FastAPI
+pymongo
+pydantic
+python-dotenv
