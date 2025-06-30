@@ -23,3 +23,17 @@ py -m pip install --upgrade pip
 ### Install dependencies
 
 pip install -r requirements.txt
+
+### After that, create the .env file based on the .env.example
+
+###
+
+### TESTING
+
+###
+
+### db_testing
+
+# Ejecutar el siguiente comando desde la raíz del proyecto para comprobar la conexión con la base de datos
+
+python -m testing.db_testing.db_connection_test
