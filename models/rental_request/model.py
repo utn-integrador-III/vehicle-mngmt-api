@@ -1,24 +1,23 @@
-from models.rental_request.db_queries import __vehicle_db__
-from bson import ObjectId
+from models.rental_request.db_queries import VehicleDBManager
 
-class CarModel:
+class VehicleModel:
 
     @staticmethod
     def get_all():
-        return list(__vehicle_db__.get_all_data())
+        return VehicleDBManager.get_all()
 
     @staticmethod
-    def get_by_id(__vehicle_db__):
-        return __vehicle_db__.get_by_id(__vehicle_db__id)
+    def get_by_id(id: str):
+        return VehicleDBManager.get_by_id(id)
 
     @staticmethod
-    def create(data):
-        return __vehicle_db__.create_data(data)
+    def create(data: dict):
+        return VehicleDBManager.create(data)
 
     @staticmethod
-    def update(__vehicle_db__, data):
-        return __vehicle_db__.update_data(__vehicle_db___id, data)
+    def update(id: str, data: dict):
+        return VehicleDBManager.update(id, data)
 
     @staticmethod
-    def delete(__vehicle_db__):
-        return __vehicle_db__.delete_data(__vehicle_db__)
+    def delete(id: str):
+        return VehicleDBManager.delete(id)

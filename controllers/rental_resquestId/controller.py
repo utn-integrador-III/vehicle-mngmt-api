@@ -1,53 +1,37 @@
-from fastapi import APIRouter, UploadFile, File, Form
-from models.rental_request.car_model import CarModel
+from flask_restful import Resource
+from controllers.rental_resquestId.parser import car_parser_update
+from models.rental_request.model import VehicleModel
 from utils.server_response import ServerResponse, StatusCode
 from utils.message_codes import *
-import shutil, os
 
-router = APIRouter()
+class VehicleByIdController(Resource):
+    route = '/car/<string:id>'
 
-@router.get("/car/{car_id}")
-def get_car(car_id: str):
-    car = CarModel.get_by_id(car_id)
-    if not car:
-        return ServerResponse("Car not found", CAR_NOT_FOUND, StatusCode.NOT_FOUND)
-    car["id"] = str(car["_id"])
-    car.pop("_id", None)
-    return ServerResponse("Car retrieved successfully", CAR_RETRIEVED, StatusCode.OK, car)
+    def get(self, id):
+        car = VehicleModel.get_by_id(id)
+        if not car:
+            return ServerResponse.build(message_code=CAR_NOT_FOUND, status=StatusCode.NOT_FOUND)
+        car["id"] = str(car["_id"])
+        car.pop("_id", None)
+        return ServerResponse.build(data=car, message="Vehicle found", message_code=CAR_SUCCESSFULLY_CREATED)
 
-@router.put("/car/{car_id}")
-def update_car(
-    car_id: str,
-    plate: str = Form(...),
-    brand: str = Form(...),
-    year: str = Form(...),
-    status: str = Form(...),
-    picture: UploadFile = File(None)
-):
-    car = CarModel.get_by_id(car_id)
-    if not car:
-        return ServerResponse("Car not found", CAR_NOT_FOUND, StatusCode.NOT_FOUND)
+    def put(self, id):
+        parser = car_parser_update()
+        data = parser.parse_args()
 
-    update_data = {
-        "plate": plate,
-        "brand": brand,
-        "year": year,
-        "status": status
-    }
+        car = VehicleModel.get_by_id(id)
+        if not car:
+            return ServerResponse.build(message_code=CAR_NOT_FOUND, status=StatusCode.NOT_FOUND)
 
-    if picture:
-        path = f"static/pictures/{car_id}_{picture.filename}"
-        with open(path, "wb") as f:
-            shutil.copyfileobj(picture.file, f)
-        update_data["picture"] = path
+        try:
+            VehicleModel.update(id, data)
+            data["id"] = id
+            return ServerResponse.build(data=data, message="Updated", message_code=CAR_SUCCESSFULLY_UPDATED)
+        except:
+            return ServerResponse.build(message_code=INTERNAL_SERVER_ERROR_MSG, status=StatusCode.INTERNAL_SERVER_ERROR)
 
-    CarModel.update(car_id, update_data)
-    update_data["id"] = car_id
-    return ServerResponse("Car updated successfully", CAR_UPDATED, StatusCode.OK, update_data)
-
-@router.delete("/car/{car_id}")
-def delete_car(car_id: str):
-    result = CarModel.delete(car_id)
-    if not result:
-        return ServerResponse("Car not found", CAR_NOT_FOUND, StatusCode.NOT_FOUND)
-    return ServerResponse("Car deleted successfully", CAR_DELETED, StatusCode.OK)
+    def delete(self, id):
+        deleted = VehicleModel.delete(id)
+        if not deleted:
+            return ServerResponse.build(message_code=CAR_NOT_FOUND, status=StatusCode.NOT_FOUND)
+        return ServerResponse.build(message="Deleted", message_code=CAR_SUCCESSFULLY_DELETED)
