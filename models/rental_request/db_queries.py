@@ -1,3 +1,4 @@
+
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -21,7 +22,10 @@ class VehicleDBManager:
 
     @staticmethod
     def get_by_id(id: str):
-        return vehicle_collection.find_one({"_id": ObjectId(id)})
+        try:
+            return vehicle_collection.find_one({"_id": ObjectId(id)})
+        except Exception:
+            return None
 
     @staticmethod
     def create(data: dict):
