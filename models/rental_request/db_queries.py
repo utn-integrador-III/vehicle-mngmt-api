@@ -1,4 +1,4 @@
-# models/rental_request/db_queries.py
+
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv

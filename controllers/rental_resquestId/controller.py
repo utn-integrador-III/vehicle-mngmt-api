@@ -1,4 +1,4 @@
-# controllers/rental_requestId/controller.py
+
 from fastapi import APIRouter, HTTPException, status
 from models.rental_request.model import VehicleModel
 from controllers.rental_resquestId.parser import CarUpdateSchema

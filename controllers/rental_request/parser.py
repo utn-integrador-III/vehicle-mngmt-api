@@ -1,4 +1,4 @@
-# controllers/rental_request/schemas.py
+
 from pydantic import BaseModel, Field
 from utils.message_codes import *
 
