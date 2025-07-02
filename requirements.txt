@@ -2,4 +2,3 @@ FastAPI
 pymongo
 pydantic
 python-dotenv
-flask-restful
