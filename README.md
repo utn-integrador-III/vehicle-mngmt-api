@@ -26,6 +26,10 @@ pip install -r requirements.txt
 
 ### After that, create the .env file based on the .env.example
 
+### Inicialize the app
+
+uvicorn app:app --reload
+
 ###
 
 ### TESTING
