@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 
 # Import routers from controllers
 
-# from controllers.vehicle.controller import router as vehicle_router
-# from controllers.vehicleId.controller import router as vehicle_id_router
+from controllers.vehicle.controller import router as vehicle_router
+from controllers.vehicleId.controller import router as vehicle_id_router
 # from controllers.rental_request.controller import router as rental_request_router
 # from controllers.rental_resquestId.controller import router as rental_request_id_router
 
@@ -46,8 +46,8 @@ async def root():
     )
 
 # Include routers from controllers
-# app.include_router(vehicle_router)
-# app.include_router(vehicle_id_router)
+app.include_router(vehicle_router)
+app.include_router(vehicle_id_router)
 # app.include_router(rental_request_router)
 # app.include_router(rental_request_id_router)
 

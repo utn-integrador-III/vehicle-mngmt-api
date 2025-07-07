@@ -1,23 +1,23 @@
-from models.rental_request.db_queries import VehicleDBManager
+from models.rental_request.db_queries import RentalRequestDBManager
 
-class VehicleModel:
+class RentalRequestModel:
 
     @staticmethod
     def get_all():
-        return VehicleDBManager.get_all()
+        return RentalRequestDBManager.get_all()
 
     @staticmethod
     def get_by_id(id: str):
-        return VehicleDBManager.get_by_id(id)
+        return RentalRequestDBManager.get_by_id(id)
 
     @staticmethod
     def create(data: dict):
-        return VehicleDBManager.create(data)
+        return RentalRequestDBManager.create(data)
 
     @staticmethod
     def update(id: str, data: dict):
-        return VehicleDBManager.update(id, data)
+        return RentalRequestDBManager.update(id, data)
 
     @staticmethod
     def delete(id: str):
-        return VehicleDBManager.delete(id)
+        return RentalRequestDBManager.delete(id)
