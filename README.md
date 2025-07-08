@@ -34,6 +34,11 @@ uvicorn app:app --reload
 
 ### TESTING
 
+## Try testing to vehicle
+## Run the next command
+
+pytest
+
 ###
 
 ### db_testing

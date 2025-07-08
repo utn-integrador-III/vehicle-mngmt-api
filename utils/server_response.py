@@ -14,11 +14,12 @@ class StatusCode:
 
 class ServerResponse:
     @staticmethod
-    def build(data=None, message=None, message_code=None, status=StatusCode.OK):
+    def build(data=None, message=None, message_code=None, status=StatusCode.OK, code="SUCCESS"):
         if not message:
             message, message_code = ServerResponse.__get_default_msg(status)
 
         body = {
+            "code": code,             # Ahora sí usamos el parámetro `code`
             "data": data,
             "message": message,
             "message_code": message_code,
