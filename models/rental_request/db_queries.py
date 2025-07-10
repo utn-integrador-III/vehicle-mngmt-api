@@ -1,17 +1,14 @@
 import os
-from pymongo import MongoClient
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
+from db.mongo_client import db
 
 load_dotenv()
 
-MONGO_URL = os.getenv("MONGO_URL")
-MONGO_DB = os.getenv("MONGO_DB")
 RENTAL_REQUEST_COLLECTION = os.getenv("RENTAL_REQUEST_COLLECTION")
 
-client = MongoClient(MONGO_URL)
-db = client[MONGO_DB]
 rental_request_collection = db[RENTAL_REQUEST_COLLECTION]
+
 
 class RentalRequestDBManager:
 

@@ -1,18 +1,14 @@
 
 import os
-from pymongo import MongoClient
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
+from db.mongo_client import db
 
 load_dotenv()
 
-MONGO_URL = os.getenv("MONGO_URL")
-MONGO_DB = os.getenv("MONGO_DB")
 VEHICLE_COLLECTION = os.getenv("VEHICLE_COLLECTION")
-
-client = MongoClient(MONGO_URL)
-db = client[MONGO_DB]
 vehicle_collection = db[VEHICLE_COLLECTION]
+
 
 class VehicleDBManager:
 
