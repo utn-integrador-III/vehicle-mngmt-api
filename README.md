@@ -24,17 +24,22 @@ py -m pip install --upgrade pip
 
 pip install -r requirements.txt
 
-### After that, create the .env file based on the .env.example
+After that, create the .env file based on the .env.example
 
 ### Inicialize the app
 
 uvicorn app:app --reload
+
+### En caso de agregar una nueva libreria, ejecutar el siguiente comando para actualizar el requirements.txt
+
+pip freeze > .\requirements.txt
 
 ###
 
 ### TESTING
 
 ## Try testing to vehicle
+
 ## Run the next command
 
 pytest
