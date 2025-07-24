@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, UploadFile, File, Form
+from fastapi import status as fastapi_status
 from typing import List
 from models.vehicle.model import VehicleModel
 from controllers.vehicle.parser import CarCreateSchema
-from utils.server_response import ServerResponse, StatusCode
+from utils.server_response import StatusCode, ServerResponse
 from utils.message_codes import *
 import base64
 from datetime import datetime
@@ -42,32 +43,49 @@ async def get_vehicles():
             code="INTERNAL_SERVER_ERROR"
         )
 
-@router.post("/", response_model=dict, status_code=status.HTTP_201_CREATED)
-def create_vehicle(car: CarCreateSchema):
+@router.post("/", response_model=dict, status_code=fastapi_status.HTTP_201_CREATED)
+async def create_vehicle(
+    plate: str = Form(...),
+    model: str = Form(...),
+    type: str = Form(...),
+    brand: str = Form(...),
+    year: str = Form(...),
+    status: str = Form(...),
+    photo: UploadFile = File(...)
+):
     try:
-        data = car.model_dump()
+        photo_bytes = await photo.read()
+        
+        data = {
+            "plate": plate,
+            "model": model,
+            "type": type,
+            "brand": brand,
+            "year": year,
+            "status": status,
+            "photo": base64.b64encode(photo_bytes).decode("utf-8")
+        }
+        
         result = VehicleModel.create(data)
-        
-        # Ojo: Si `create` retorna el documento creado, debes convertir ObjectId a str
-        # Si no, solo tomamos inserted_id para poner en el id:
-        
-        # Limpiar campos con ObjectId si existiesen, ejemplo:
+
+        data["id"] = str(result.inserted_id)
+
         if "_id" in data:
             del data["_id"]
-        
-        data["id"] = str(result.inserted_id)
-        
+
         return ServerResponse.build(
             data=data,
             message="Car created",
             message_code=CAR_SUCCESSFULLY_CREATED,
-            status=status.HTTP_201_CREATED,
+            status=fastapi_status.HTTP_201_CREATED,
             code="SUCCESS"
         )
+
     except Exception as e:
         print("ERROR in create_vehicle:", e)
         return ServerResponse.build(
+            message="Internal server error",
             message_code=INTERNAL_SERVER_ERROR_MSG,
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status=StatusCode.INTERNAL_SERVER_ERROR,
             code="INTERNAL_SERVER_ERROR"
         )
