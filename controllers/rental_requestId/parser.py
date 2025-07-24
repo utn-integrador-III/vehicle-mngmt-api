@@ -1,0 +1,7 @@
+class RentalRequestIdParser:
+
+    @staticmethod
+    def parse_update(data: dict) -> dict:
+        # Aquí puedes agregar validaciones si quieres
+        allowed_fields = ["start_date", "end_date", "status"]
+        return {key: data[key] for key in allowed_fields if key in data}

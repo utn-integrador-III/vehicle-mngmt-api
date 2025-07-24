@@ -4,11 +4,16 @@ class RentalRequestModel:
 
     @staticmethod
     def get_all():
-        return RentalRequestDBManager.get_all()
+        results = RentalRequestDBManager.get_all()
+        # Convertir ObjectId a str en cada documento
+        return [{**doc, "_id": str(doc["_id"])} for doc in results]
 
     @staticmethod
     def get_by_id(id: str):
-        return RentalRequestDBManager.get_by_id(id)
+        doc = RentalRequestDBManager.get_by_id(id)
+        if doc:
+            doc["_id"] = str(doc["_id"])
+        return doc
 
     @staticmethod
     def create(data: dict):
