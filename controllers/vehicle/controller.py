@@ -9,6 +9,7 @@ import base64
 from datetime import datetime
 router = APIRouter(prefix="/car", tags=["Vehicles"])
 
+
 @router.get("/", response_model=dict)
 async def get_vehicles():
     try:
@@ -43,6 +44,7 @@ async def get_vehicles():
             code="INTERNAL_SERVER_ERROR"
         )
 
+
 @router.post("/", response_model=dict, status_code=fastapi_status.HTTP_201_CREATED)
 async def create_vehicle(
     plate: str = Form(...),
@@ -55,7 +57,7 @@ async def create_vehicle(
 ):
     try:
         photo_bytes = await photo.read()
-        
+
         data = {
             "plate": plate,
             "model": model,
@@ -65,7 +67,7 @@ async def create_vehicle(
             "status": status,
             "photo": base64.b64encode(photo_bytes).decode("utf-8")
         }
-        
+
         result = VehicleModel.create(data)
 
         data["id"] = str(result.inserted_id)
