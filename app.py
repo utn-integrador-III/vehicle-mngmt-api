@@ -9,6 +9,7 @@ from controllers.vehicle.controller import router as vehicle_router
 from controllers.vehicleId.controller import router as vehicle_id_router
 from controllers.rental_request.controller import router as rental_request_router
 from controllers.rental_requestId.controller import router as rental_request_id_router
+from controllers.health.controller import router as health_router
 
 # Import utilities
 from utils.server_response import ServerResponse, StatusCode
@@ -50,6 +51,7 @@ app.include_router(vehicle_router)
 app.include_router(vehicle_id_router)
 app.include_router(rental_request_router)
 app.include_router(rental_request_id_router)
+app.include_router(health_router)
 
 
 # Run the application
