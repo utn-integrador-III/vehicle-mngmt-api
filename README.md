@@ -51,3 +51,11 @@ pytest
 # Ejecutar el siguiente comando desde la raíz del proyecto para comprobar la conexión con la base de datos
 
 python -m testing.db_testing.db_connection_test
+
+## Docker
+
+For build the Docker image, type the command:
+
+```cmd
+docker-compose up --build
+```
