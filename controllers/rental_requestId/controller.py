@@ -25,12 +25,21 @@ async def update_rental_request(rental_request_id: str, request: Request):
     payload = await request.json()
     parsed_data = RentalRequestIdParser.parse_update(payload)
 
-    update_result = RentalRequestModel.update(rental_request_id, parsed_data)
-    if update_result.modified_count > 0:
+    try:
+        update_result = RentalRequestModel.update(
+            rental_request_id, parsed_data)
+        if update_result.modified_count > 0:
+            return ServerResponse.build(
+                data={"modified": update_result.modified_count},
+                message_code=OK_MSG
+            )
+    except ValueError as e:
         return ServerResponse.build(
-            data={"modified": update_result.modified_count},
-            message_code=OK_MSG
+            message=str(e),
+            message_code="TIME_SLOT_TAKEN",
+            status=StatusCode.BAD_REQUEST
         )
+
     return ServerResponse.build(
         message="Rental request not found",
         message_code=NOT_FOUND_MSG,

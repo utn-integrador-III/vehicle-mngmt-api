@@ -35,3 +35,16 @@ class RentalRequestDBManager:
     def delete(id: str):
         result = rental_request_collection.delete_one({"_id": ObjectId(id)})
         return result.deleted_count > 0
+
+    @staticmethod
+    def is_time_slot_taken(start_date: str, end_date: str, exclude_id: str = None):
+        query = {
+            "status": "approved",
+            "$or": [
+                {"start_date": {"$lt": end_date}, "end_date": {"$gt": start_date}}
+            ]
+        }
+        if exclude_id:
+            query["_id"] = {"$ne": ObjectId(exclude_id)}
+
+        return rental_request_collection.find_one(query) is not None

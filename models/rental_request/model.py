@@ -1,5 +1,6 @@
 from models.rental_request.db_queries import RentalRequestDBManager
 
+
 class RentalRequestModel:
 
     @staticmethod
@@ -17,10 +18,20 @@ class RentalRequestModel:
 
     @staticmethod
     def create(data: dict):
+        # Validar si hay conflicto de horario con otra solicitud aprobada
+        if RentalRequestDBManager.is_time_slot_taken(data["start_date"], data["end_date"]):
+            raise ValueError(
+                "Time slot is already taken by an approved request.")
+
         return RentalRequestDBManager.create(data)
 
     @staticmethod
     def update(id: str, data: dict):
+        # Validar si hay conflicto de horario con otra solicitud aprobada (excluyendo esta misma)
+        if RentalRequestDBManager.is_time_slot_taken(data["start_date"], data["end_date"], exclude_id=id):
+            raise ValueError(
+                "Time slot is already taken by an approved request.")
+
         return RentalRequestDBManager.update(id, data)
 
     @staticmethod

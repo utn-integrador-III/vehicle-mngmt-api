@@ -18,14 +18,22 @@ async def create_rental_request(request: Request):
     payload = await request.json()
     parsed_data = RentalRequestParser.parse_create(payload)
 
-    insert_result = RentalRequestModel.create(parsed_data)
-    if insert_result.inserted_id:
+    try:
+        insert_result = RentalRequestModel.create(parsed_data)
+        if insert_result.inserted_id:
+            return ServerResponse.build(
+                data={"inserted_id": str(insert_result.inserted_id)},
+                message_code=CREATED_MSG,
+                code=CREATED_MSG,
+                status=StatusCode.CREATED
+            )
+    except ValueError as e:
         return ServerResponse.build(
-        data={"inserted_id": str(insert_result.inserted_id)},
-        message_code=CREATED_MSG,
-        code=CREATED_MSG,          # <---- Aquí agregas este parámetro
-        status=StatusCode.CREATED
-    )
+            message=str(e),
+            message_code="TIME_SLOT_TAKEN",
+            status=StatusCode.BAD_REQUEST
+        )
+
     return ServerResponse.build(
         message="Creation failed",
         message_code=INTERNAL_SERVER_ERROR_MSG,
