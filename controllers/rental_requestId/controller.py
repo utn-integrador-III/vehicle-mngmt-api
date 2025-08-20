@@ -33,19 +33,30 @@ async def update_rental_request(rental_request_id: str, request: Request):
                 data={"modified": update_result.modified_count},
                 message_code=OK_MSG
             )
+        else:
+            # Si no se modificó nada, podría ser porque no existe el documento
+            return ServerResponse.build(
+                message="Rental request not found",
+                message_code=NOT_FOUND_MSG,
+                status=StatusCode.NOT_FOUND,
+                code=NOT_FOUND_MSG
+            )
     except ValueError as e:
-        return ServerResponse.build(
-            message=str(e),
-            message_code="TIME_SLOT_TAKEN",
-            status=StatusCode.BAD_REQUEST
-        )
-
-    return ServerResponse.build(
-        message="Rental request not found",
-        message_code=NOT_FOUND_MSG,
-        status=StatusCode.NOT_FOUND,
-        code=NOT_FOUND_MSG
-    )
+        # Manejar diferentes tipos de errores
+        if "not found" in str(e):
+            return ServerResponse.build(
+                message=str(e),
+                message_code=NOT_FOUND_MSG,
+                status=StatusCode.NOT_FOUND,
+                code=NOT_FOUND_MSG
+            )
+        else:
+            # Error de conflicto de tiempo
+            return ServerResponse.build(
+                message=str(e),
+                message_code="TIME_SLOT_TAKEN",
+                status=StatusCode.BAD_REQUEST
+            )
 
 
 @router.delete("/{rental_request_id}")
