@@ -37,9 +37,10 @@ class RentalRequestDBManager:
         return result.deleted_count > 0
 
     @staticmethod
-    def is_time_slot_taken(start_date: str, end_date: str, exclude_id: str = None):
+    def is_time_slot_taken(vehicle_id: str, start_date: str, end_date: str, exclude_id: str = None):
         query = {
-            "status": "approved",
+            "vehicle_id": vehicle_id,
+            "status": {"$in": ["approved", "pending"]},
             "$or": [
                 {"start_date": {"$lt": end_date}, "end_date": {"$gt": start_date}}
             ]
