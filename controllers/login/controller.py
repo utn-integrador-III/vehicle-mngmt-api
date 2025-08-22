@@ -20,6 +20,7 @@ async def login(data: LoginSchema):
     rol = user.get("rol")
 
     user_response = {
+        "id": str(user.get("_id")),
         "cedula": user.get("cedula"),
         "nombre": user.get("nombre"),
         "apellidos": user.get("apellidos"),

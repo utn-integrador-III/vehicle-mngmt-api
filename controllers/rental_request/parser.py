@@ -2,11 +2,20 @@ class RentalRequestParser:
 
     @staticmethod
     def parse_create(data: dict) -> dict:
-        # Aquí puedes agregar validaciones o limpieza de campos si quieres
         return {
-            "user_id": data.get("user_id"),
-            "vehicle_id": data.get("vehicle_id"),
+            "applicant": data.get("applicant"),
+            "direccion": data.get("direccion"),
+            "necesidad": data.get("necesidad"),
             "start_date": data.get("start_date"),
-            "end_date": data.get("end_date"),
-            "status": data.get("status", "pending"),
+            "end_date": None,
+            "estimate": data.get("estimate"),
+            "companions": data.get("companions", []),
+            "date": {
+                "day": data.get("day"),
+                "month": data.get("month"),
+                "year": data.get("year")
+            },
+            "plate": data.get("plate"),
+            "model": data.get("model"),
+            "status": data.get("status", "pending")
         }
