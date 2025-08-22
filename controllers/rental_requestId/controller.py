@@ -9,9 +9,9 @@ router = APIRouter(prefix="/rental_requestId", tags=["Rental Requests By ID"])
 
 @router.get("/{rental_request_id}")
 async def get_rental_request_by_id(rental_request_id: str):
-    result = RentalRequestModel.get_by_id(rental_request_id)
-    if result:
-        return ServerResponse.build(data=result, message_code=OK_MSG)
+    results = RentalRequestModel.get_by_any(rental_request_id)
+    if results:
+        return ServerResponse.build(data=results, message_code=OK_MSG)
     return ServerResponse.build(
         message="Rental request not found",
         message_code=NOT_FOUND_MSG,
@@ -26,15 +26,13 @@ async def update_rental_request(rental_request_id: str, request: Request):
     parsed_data = RentalRequestIdParser.parse_update(payload)
 
     try:
-        update_result = RentalRequestModel.update(
-            rental_request_id, parsed_data)
+        update_result = RentalRequestModel.update(rental_request_id, parsed_data)
         if update_result.modified_count > 0:
             return ServerResponse.build(
                 data={"modified": update_result.modified_count},
                 message_code=OK_MSG
             )
         else:
-            # Si no se modificó nada, podría ser porque no existe el documento
             return ServerResponse.build(
                 message="Rental request not found",
                 message_code=NOT_FOUND_MSG,
@@ -42,7 +40,6 @@ async def update_rental_request(rental_request_id: str, request: Request):
                 code=NOT_FOUND_MSG
             )
     except ValueError as e:
-        # Manejar diferentes tipos de errores
         if "not found" in str(e):
             return ServerResponse.build(
                 message=str(e),
@@ -51,7 +48,6 @@ async def update_rental_request(rental_request_id: str, request: Request):
                 code=NOT_FOUND_MSG
             )
         else:
-            # Error de conflicto de tiempo
             return ServerResponse.build(
                 message=str(e),
                 message_code="TIME_SLOT_TAKEN",
